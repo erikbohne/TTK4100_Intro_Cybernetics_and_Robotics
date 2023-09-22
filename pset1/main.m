@@ -15,7 +15,3 @@ plot(ans.values.Data);
 xlabel('x1');
 ylabel('x2');
 title('Van der Pol Oscillator');
-
-
-
-

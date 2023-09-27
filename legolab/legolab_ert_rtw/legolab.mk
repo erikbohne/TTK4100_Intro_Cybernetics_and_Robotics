@@ -2,7 +2,7 @@
 ## Makefile generated for component 'legolab'. 
 ## 
 ## Makefile     : legolab.mk
-## Generated on : Tue Sep 26 10:55:24 2023
+## Generated on : Wed Sep 27 13:54:57 2023
 ## Final product: $(RELATIVE_PATH_TO_ANCHOR)/legolab
 ## Product type : executable
 ## 
@@ -163,7 +163,7 @@ INCLUDES = $(INCLUDES_BUILDINFO)
 ## DEFINES
 ###########################################################################
 
-DEFINES_ = -D__MW_TARGET_USE_HARDWARE_RESOURCES_H__
+DEFINES_ = -D__MW_TARGET_USE_HARDWARE_RESOURCES_H__ -D_RTT_LCD_=6
 DEFINES_BUILD_ARGS = -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DONESTEPFCN=1 -DTERMFCN=1 -DMULTI_INSTANCE_CODE=0 -DINTEGER_CODE=0 -DMT=0
 DEFINES_CUSTOM = 
 DEFINES_OPTS = -DTID01EQ=1
@@ -176,7 +176,7 @@ DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)/legolab_ert_rtw/legolab.c $(START_DIR)/legolab_ert_rtw/legolab_data.c $(MATLAB_ROOT)/toolbox/target/codertarget/rtos/src/linuxinitialize.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_button.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_lcd.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/MW_legoev3init.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_pixy2_vision_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_encoder.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_gyro_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_motor.c
+SRCS = $(START_DIR)/legolab_ert_rtw/legolab.c $(START_DIR)/legolab_ert_rtw/legolab_data.c $(START_DIR)/legolab_ert_rtw/rtGetInf.c $(START_DIR)/legolab_ert_rtw/rtGetNaN.c $(START_DIR)/legolab_ert_rtw/rt_nonfinite.c $(MATLAB_ROOT)/toolbox/target/codertarget/rtos/src/linuxinitialize.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_button.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_lcd.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/MW_legoev3init.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_pixy2_vision_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_encoder.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_gyro_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_motor.c
 
 MAIN_SRC = $(START_DIR)/legolab_ert_rtw/ert_main.c
 
@@ -186,7 +186,7 @@ ALL_SRCS = $(SRCS) $(MAIN_SRC)
 ## OBJECTS
 ###########################################################################
 
-OBJS = legolab.o legolab_data.o linuxinitialize.o driver_ev3_button.o driver_ev3_lcd.o MW_legoev3init.o driver_pixy2_vision_sensor.o driver_ev3_encoder.o driver_ev3_gyro_sensor.o driver_ev3_motor.o
+OBJS = legolab.o legolab_data.o rtGetInf.o rtGetNaN.o rt_nonfinite.o linuxinitialize.o driver_ev3_button.o driver_ev3_lcd.o MW_legoev3init.o driver_pixy2_vision_sensor.o driver_ev3_encoder.o driver_ev3_gyro_sensor.o driver_ev3_motor.o
 
 MAIN_OBJ = ert_main.o
 
@@ -391,6 +391,18 @@ legolab.o : $(START_DIR)/legolab_ert_rtw/legolab.c
 
 
 legolab_data.o : $(START_DIR)/legolab_ert_rtw/legolab_data.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+rtGetInf.o : $(START_DIR)/legolab_ert_rtw/rtGetInf.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+rtGetNaN.o : $(START_DIR)/legolab_ert_rtw/rtGetNaN.c
+	$(CC) $(CFLAGS) -o "$@" "$<"
+
+
+rt_nonfinite.o : $(START_DIR)/legolab_ert_rtw/rt_nonfinite.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 

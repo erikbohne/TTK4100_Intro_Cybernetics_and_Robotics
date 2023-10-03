@@ -2,7 +2,7 @@
 ## Makefile generated for component 'legolab'. 
 ## 
 ## Makefile     : legolab.mk
-## Generated on : Tue Oct 03 12:54:16 2023
+## Generated on : Tue Oct 03 15:16:46 2023
 ## Final product: $(RELATIVE_PATH_TO_ANCHOR)/legolab
 ## Product type : executable
 ## 

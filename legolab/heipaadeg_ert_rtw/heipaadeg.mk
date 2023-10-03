@@ -1,9 +1,9 @@
 ###########################################################################
-## Makefile generated for component 'legolab'. 
+## Makefile generated for component 'heipaadeg'. 
 ## 
-## Makefile     : legolab.mk
-## Generated on : Tue Oct 03 12:54:16 2023
-## Final product: $(RELATIVE_PATH_TO_ANCHOR)/legolab
+## Makefile     : heipaadeg.mk
+## Generated on : Tue Oct 03 12:57:24 2023
+## Final product: $(RELATIVE_PATH_TO_ANCHOR)/heipaadeg
 ## Product type : executable
 ## 
 ###########################################################################
@@ -16,8 +16,8 @@
 # PRODUCT_NAME            Name of the system to build
 # MAKEFILE                Name of this makefile
 
-PRODUCT_NAME              = legolab
-MAKEFILE                  = legolab.mk
+PRODUCT_NAME              = heipaadeg
+MAKEFILE                  = heipaadeg.mk
 MATLAB_ROOT               = /Applications/AppsAnywhere/MATLAB_R2023a.app
 MATLAB_BIN                = /Applications/AppsAnywhere/MATLAB_R2023a.app/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/maci64
@@ -147,7 +147,7 @@ SHAREDLIB_LDFLAGS    =
 ## OUTPUT INFO
 ###########################################################################
 
-PRODUCT = $(RELATIVE_PATH_TO_ANCHOR)/legolab
+PRODUCT = $(RELATIVE_PATH_TO_ANCHOR)/heipaadeg
 PRODUCT_TYPE = "executable"
 BUILD_TYPE = "Top-Level Standalone Executable"
 
@@ -155,7 +155,7 @@ BUILD_TYPE = "Top-Level Standalone Executable"
 ## INCLUDE PATHS
 ###########################################################################
 
-INCLUDES_BUILDINFO = -I$(START_DIR) -I/Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/include -I$(START_DIR)/legolab_ert_rtw -I$(MATLAB_ROOT)/extern/include -I$(MATLAB_ROOT)/simulink/include -I$(MATLAB_ROOT)/rtw/c/src -I$(MATLAB_ROOT)/rtw/c/src/ext_mode/common -I$(MATLAB_ROOT)/rtw/c/ert -I$(EV3_LMSTYPES_DIR)/.. -I$(EV3_LMS2012_DIR)/.. -I$(EV3_BYTECODES_DIR)/.. -I$(MATLAB_ROOT)/toolbox/coder/rtiostream/src/utils -I$(MATLAB_ROOT)/toolbox/target/codertarget/rtos/inc -I/Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src
+INCLUDES_BUILDINFO = -I$(START_DIR) -I/Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/include -I$(START_DIR)/heipaadeg_ert_rtw -I$(MATLAB_ROOT)/extern/include -I$(MATLAB_ROOT)/simulink/include -I$(MATLAB_ROOT)/rtw/c/src -I$(MATLAB_ROOT)/rtw/c/src/ext_mode/common -I$(MATLAB_ROOT)/rtw/c/ert -I$(EV3_LMSTYPES_DIR)/.. -I$(EV3_LMS2012_DIR)/.. -I$(EV3_BYTECODES_DIR)/.. -I$(MATLAB_ROOT)/toolbox/coder/rtiostream/src/utils -I$(MATLAB_ROOT)/toolbox/target/codertarget/rtos/inc -I/Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src
 
 INCLUDES = $(INCLUDES_BUILDINFO)
 
@@ -168,7 +168,7 @@ DEFINES_BUILD_ARGS = -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DONESTEPFCN=1 -DTE
 DEFINES_CUSTOM = 
 DEFINES_OPTS = -DTID01EQ=1
 DEFINES_SKIPFORSIL = -D__linux__ -DARM_PROJECT -D_USE_TARGET_UDP_ -D_RUNONTARGETHARDWARE_BUILD_ -DSTACK_SIZE=64 -DRT
-DEFINES_STANDARD = -DMODEL=legolab -DNUMST=2 -DNCSTATES=4 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0
+DEFINES_STANDARD = -DMODEL=heipaadeg -DNUMST=2 -DNCSTATES=4 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0
 
 DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(DEFINES_SKIPFORSIL) $(DEFINES_STANDARD)
 
@@ -176,9 +176,9 @@ DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = $(START_DIR)/legolab_ert_rtw/legolab.c $(START_DIR)/legolab_ert_rtw/legolab_data.c $(START_DIR)/legolab_ert_rtw/rtGetInf.c $(START_DIR)/legolab_ert_rtw/rtGetNaN.c $(START_DIR)/legolab_ert_rtw/rt_nonfinite.c $(MATLAB_ROOT)/toolbox/target/codertarget/rtos/src/linuxinitialize.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_button.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_lcd.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/MW_legoev3init.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_pixy2_vision_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_encoder.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_gyro_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_motor.c
+SRCS = $(START_DIR)/heipaadeg_ert_rtw/heipaadeg.c $(START_DIR)/heipaadeg_ert_rtw/heipaadeg_data.c $(START_DIR)/heipaadeg_ert_rtw/rtGetInf.c $(START_DIR)/heipaadeg_ert_rtw/rtGetNaN.c $(START_DIR)/heipaadeg_ert_rtw/rt_nonfinite.c $(MATLAB_ROOT)/toolbox/target/codertarget/rtos/src/linuxinitialize.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_button.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_lcd.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/MW_legoev3init.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_pixy2_vision_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_encoder.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_gyro_sensor.c /Users/eriknymobohne/Documents/MATLAB/SupportPackages/R2023a/toolbox/target/supportpackages/ev3/src/driver_ev3_motor.c
 
-MAIN_SRC = $(START_DIR)/legolab_ert_rtw/ert_main.c
+MAIN_SRC = $(START_DIR)/heipaadeg_ert_rtw/ert_main.c
 
 ALL_SRCS = $(SRCS) $(MAIN_SRC)
 
@@ -186,7 +186,7 @@ ALL_SRCS = $(SRCS) $(MAIN_SRC)
 ## OBJECTS
 ###########################################################################
 
-OBJS = legolab.o legolab_data.o rtGetInf.o rtGetNaN.o rt_nonfinite.o linuxinitialize.o driver_ev3_button.o driver_ev3_lcd.o MW_legoev3init.o driver_pixy2_vision_sensor.o driver_ev3_encoder.o driver_ev3_gyro_sensor.o driver_ev3_motor.o
+OBJS = heipaadeg.o heipaadeg_data.o rtGetInf.o rtGetNaN.o rt_nonfinite.o linuxinitialize.o driver_ev3_button.o driver_ev3_lcd.o MW_legoev3init.o driver_pixy2_vision_sensor.o driver_ev3_encoder.o driver_ev3_gyro_sensor.o driver_ev3_motor.o
 
 MAIN_OBJ = ert_main.o
 
@@ -358,11 +358,11 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(MAIN_OBJ)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-%.o : $(START_DIR)/legolab_ert_rtw/%.c
+%.o : $(START_DIR)/heipaadeg_ert_rtw/%.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-%.o : $(START_DIR)/legolab_ert_rtw/%.cpp
+%.o : $(START_DIR)/heipaadeg_ert_rtw/%.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
@@ -382,27 +382,27 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(MAIN_OBJ)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-ert_main.o : $(START_DIR)/legolab_ert_rtw/ert_main.c
+ert_main.o : $(START_DIR)/heipaadeg_ert_rtw/ert_main.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-legolab.o : $(START_DIR)/legolab_ert_rtw/legolab.c
+heipaadeg.o : $(START_DIR)/heipaadeg_ert_rtw/heipaadeg.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-legolab_data.o : $(START_DIR)/legolab_ert_rtw/legolab_data.c
+heipaadeg_data.o : $(START_DIR)/heipaadeg_ert_rtw/heipaadeg_data.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rtGetInf.o : $(START_DIR)/legolab_ert_rtw/rtGetInf.c
+rtGetInf.o : $(START_DIR)/heipaadeg_ert_rtw/rtGetInf.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rtGetNaN.o : $(START_DIR)/legolab_ert_rtw/rtGetNaN.c
+rtGetNaN.o : $(START_DIR)/heipaadeg_ert_rtw/rtGetNaN.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-rt_nonfinite.o : $(START_DIR)/legolab_ert_rtw/rt_nonfinite.c
+rt_nonfinite.o : $(START_DIR)/heipaadeg_ert_rtw/rt_nonfinite.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 

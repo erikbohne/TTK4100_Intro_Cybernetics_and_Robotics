@@ -20,9 +20,14 @@ for n = 1:numel(t) - 1
 end
 
 % Plot velocity
-plot(t, v, "-")
+hold on;
+plot(t, v, "b-")
+
+% Plot the exact solution
+v_exact = exp((-(k/m) * t)) * (v(1) - (u/k)) + (u/k);
+
+plot(t, v_exact, "r-")
 xlabel('Time [s]')
 ylabel('Velocity [m/s]')
-title('Velocity of AUV using Euler''s Method')
-
-
+title('Velocity of AUV using Euler''s Method (Blue) vs Exact solution (Red)')
+hold off;

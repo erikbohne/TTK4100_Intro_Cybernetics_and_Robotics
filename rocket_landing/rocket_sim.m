@@ -38,7 +38,7 @@ burn_end_time = landing_time; % We cut the engine when landed
 burn_time = landing_time - burn_start_time;
 
 % Energy Used
-energy_used = trapz(t(burn_start_idx:burn_end_idx), u_m(burn_start_idx:burn_end_idx) .* -v(burn_start_idx:burn_end_idx));
+energy_used = trapz(t(burn_start_idx:landing_idx), u_m(burn_start_idx:landing_idx) .* -v(burn_start_idx:landing_idx));
 
 % Maximum G-force
 a = (u_m - m*g - k*v.^2) ./ m; % Acceleration
@@ -52,3 +52,6 @@ fprintf('Landing time: %f seconds\n', landing_time);
 fprintf('Landing velocity: %f m/s\n', landing_velocity);
 fprintf('Energy used: %f J (or appropriate unit)\n', energy_used);
 fprintf('Maximum G-force experienced: %f g\n', max_g);
+
+% After your simulation
+save('simulationResults.mat', "u_m", "t", "h", "v");

@@ -3,3 +3,4 @@
 .DS_Store
 legolab_ert_rtw/
 legolab_ert_rtw/*
+*.mk

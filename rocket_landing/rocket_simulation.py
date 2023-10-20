@@ -1,65 +1,153 @@
 import pygame
 from scipy.io import loadmat
 import time
+import random
+import math
 
 # Initialize pygame
 pygame.init()
 
 # Screen dimensions
-WIDTH, HEIGHT = 1200, 900
+WIDTH, HEIGHT = 1200, 800
 
 # Colors
 BLUE = (135, 206, 235)  # Sky color
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
 GREEN = (0, 128, 0)  # Ground color
 BLACK = (0, 0, 0)     # Text color
+RED = (255, 0, 0)     # Thrust bar color
+YELLOW = (255, 255, 0)  # Color for particles
+GREY = (128, 128, 128)  # Color for landing pad
 
 # Load the data from the .mat file
 data = loadmat('simulationResults.mat')
 h_data = [float(h) for h in data['h']]
 t_data = [float(t) for t in data['t']]
-u_data = [float(u) for u in data['u_m']]
+u_th_data = [float(u) for u in data['u_m']]
+u_theta_data = [float(u_theta) for u_theta in data['u_theta']]
 v_data = [float(v) for v in data['v']]
+theta_data = [float(theta) for theta in data['theta']] # in radians
+
 
 # Set up the display and font
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Rocket Landing Simulation')
 font = pygame.font.SysFont('Arial', 24)
 
-# Define the rocket object
-rocket = pygame.Rect(WIDTH // 2 - 15, HEIGHT - h_data[0]*0.05 - 30, 30, 60)
+# Rocket scaling factors
+zoom_scale_factor = 6.67  # Adjusted scale factor
+rocket_height_scaled = int(70 * zoom_scale_factor)
+rocket_width_scaled = int(4 * zoom_scale_factor)
+rocket_pixel_height = rocket_height_scaled * 0.05  # after the scaling
+meter_per_pixel = 70 / rocket_pixel_height  # as rocket is 70 meters
+leg_length = int(10 * zoom_scale_factor)
+
+background_height = int(meter_per_pixel * max(h_data))
+background_surface = pygame.Surface((WIDTH, background_height))
 
 def scale_height(h):
     return HEIGHT - h * HEIGHT / 10000  # Scaling to fit HEIGHT
 
-def draw_window(rocket_pos, thrust, velocity, time, height):
-    screen.fill(BLUE)
+def rotate_point(x, y, theta, cx, cy):
+    """Rotate point (x,y) about point (cx,cy) by angle theta"""
+    dx = x - cx
+    dy = y - cy
+    x_new = dx * math.cos(theta) - dy * math.sin(theta) + cx
+    y_new = dx * math.sin(theta) + dy * math.cos(theta) + cy
+    return x_new, y_new
+
+def draw_full_background():
+    current_height = max(h_data)
+    for y in range(0, background_height, int(100 * meter_per_pixel)):
+        pygame.draw.line(background_surface, WHITE, (0, y), (WIDTH, y), 2)
+        height_label = font.render(f"{int(current_height)} m", True, WHITE)
+        background_surface.blit(height_label, (10, y))
+        current_height -= 100
+
+# Call the function once to prepare the entire background
+draw_full_background()
+
+def draw_window(rocket_pos, thrust, velocity, time, height, theta, u_theta):
+    # Clear the entire screen
+    screen.fill(BLACK)
     
-    # Drawing the rocket
-    pygame.draw.rect(screen, RED, (rocket.x, scale_height(rocket_pos) - rocket.height, rocket.width, rocket.height))
+    # Vertical View (Right)
+    right_center = HEIGHT + (WIDTH - HEIGHT) // 2
+    scaled_h = int(scale_height(height))
+    pygame.draw.rect(screen, GREEN, (HEIGHT, HEIGHT - 20, WIDTH - HEIGHT, 20))  # Ground
+    pygame.draw.rect(screen, BLUE, (HEIGHT, 0, WIDTH - HEIGHT, HEIGHT - 20))  # Sky
+    pygame.draw.rect(screen, RED, (right_center - rocket_width_scaled * 0.001 // 2, scaled_h, rocket_width_scaled * 0.1, rocket_height_scaled * 0.05))  # Rocket
+
+    # Calculate the portion of the background to show based on rocket height
+    offset = background_height - int(meter_per_pixel * height) - HEIGHT + 65
+    screen.blit(background_surface, (0, 0), (0, offset, HEIGHT, HEIGHT))
+
+    # Draw the stationary rocket
+    rocket_rect = pygame.Rect(HEIGHT // 2 - rocket_width_scaled // 2, HEIGHT // 2 - rocket_height_scaled // 2, rocket_width_scaled, rocket_height_scaled)
+    #pygame.draw.rect(screen, RED, rocket_rect)
+    #pygame.draw.line(screen, RED, rocket_rect.midbottom, (rocket_rect.midbottom[0] - leg_length // 2, rocket_rect.midbottom[1] + leg_length), 4)
+    #pygame.draw.line(screen, RED, rocket_rect.midbottom, (rocket_rect.midbottom[0] + leg_length // 2, rocket_rect.midbottom[1] + leg_length), 4)
     
-    # Drawing the ground
-    pygame.draw.rect(screen, GREEN, (0, scale_height(0) - 20, WIDTH, 20))
+    # Calculate the COG of the rocket
+    cog_x = HEIGHT // 2
+    cog_y = HEIGHT // 2 + 20 * zoom_scale_factor
     
-    # Drawing grid lines for h=10,000m and h=5,000m
-    pygame.draw.line(screen, BLACK, (0, scale_height(10000)), (WIDTH, scale_height(10000)), 2)
-    pygame.draw.line(screen, BLACK, (0, scale_height(5000)), (WIDTH, scale_height(5000)), 2)
+    # Rotate the rocket around COG
+    rocket_points = [
+        (rocket_rect.topleft[0], rocket_rect.topleft[1] + 10 * zoom_scale_factor),
+        rocket_rect.topleft,
+        rocket_rect.topright,
+        (rocket_rect.topright[0], rocket_rect.topright[1] + 10 * zoom_scale_factor),
+        rocket_rect.bottomright,
+        rocket_rect.bottomleft
+    ]
+    rocket_points_rotated = [rotate_point(x, y, theta, cog_x, cog_y) for x, y in rocket_points]
+    pygame.draw.polygon(screen, RED, rocket_points_rotated)
     
-    # Drawing the power bar
-    pygame.draw.rect(screen, WHITE, (50, 50, 20, 300))
-    pygame.draw.rect(screen, RED, (50, 50 + (1 - thrust/max(u_data)) * 300, 20, thrust/max(u_data)*300))
+    # Rotate and draw the rocket legs around COG
+    leg_left_start = rocket_rect.midbottom
+    leg_left_end = (rocket_rect.midbottom[0] - leg_length // 2, rocket_rect.midbottom[1] + leg_length)
+    leg_left_start_rotated = rotate_point(leg_left_start[0], leg_left_start[1], theta, cog_x, cog_y)
+    leg_left_end_rotated = rotate_point(leg_left_end[0], leg_left_end[1], theta, cog_x, cog_y)
+    pygame.draw.line(screen, RED, leg_left_start_rotated, leg_left_end_rotated, 4)
+
+    leg_right_start = rocket_rect.midbottom
+    leg_right_end = (rocket_rect.midbottom[0] + leg_length // 2, rocket_rect.midbottom[1] + leg_length)
+    leg_right_start_rotated = rotate_point(leg_right_start[0], leg_right_start[1], theta, cog_x, cog_y)
+    leg_right_end_rotated = rotate_point(leg_right_end[0], leg_right_end[1], theta, cog_x, cog_y)
+    pygame.draw.line(screen, RED, leg_right_start_rotated, leg_right_end_rotated, 4)
     
-    # Displaying metrics
-    velocity_text = font.render(f"Speed: {velocity:.2f} m/s", True, BLACK)
-    time_text = font.render(f"Time: {time:.2f} s", True, BLACK)
-    height_text = font.render(f"Height: {height:.2f} m", True, BLACK)
+    # COG
+    cog_radius = 10  # Radius of the COG circle
+    pygame.draw.circle(screen, YELLOW, (int(cog_x), int(cog_y)), cog_radius)
+
+    # Thrust particles
+    if thrust > 1:
+        num_particles = int(500 * (thrust / max(u_th_data)))  # Scaled number of particles
+        for i in range(num_particles):
+            particle_x = random.randint(rocket_rect.left, rocket_rect.right)
+            particle_y = random.randint(rocket_rect.bottom, rocket_rect.bottom + int(20 * (thrust / max(u_th_data)) * zoom_scale_factor))
+            # Generate random variations of yellow
+            yellow_r = random.randint(200, 255)
+            yellow_g = random.randint(200, 255)
+            yellow_color = (yellow_r, yellow_g, 0)
+            pygame.draw.circle(screen, yellow_color, (particle_x, particle_y), 5)
+    
+    # Metrics
+    velocity_text = font.render(f"Speed: {velocity:.2f} m/s", True, WHITE)
+    time_text = font.render(f"Time: {time:.2f} s", True, WHITE)
+    height_text = font.render(f"Height: {height:.2f} m", True, WHITE)
+    theta_text = font.render(f"Angle: {theta:.2f} rad", True, WHITE)
+    u_theta_text = font.render(f"Side thruster: {u_theta:.0f} N", True, WHITE)
     
     screen.blit(velocity_text, (WIDTH - 250, 10))
     screen.blit(time_text, (WIDTH - 250, 40))
     screen.blit(height_text, (WIDTH - 250, 70))
-    
+    screen.blit(theta_text, (WIDTH - 250, 100))
+    screen.blit(u_theta_text, (WIDTH - 250, 130))
+
     pygame.display.flip()
+
 
 # Main loop
 clock = pygame.time.Clock()
@@ -71,7 +159,7 @@ while running:
             running = False
 
     if idx < len(h_data):
-        draw_window(h_data[idx], u_data[idx], v_data[idx], t_data[idx], h_data[idx])
+        draw_window(h_data[idx], u_th_data[idx], v_data[idx], t_data[idx], h_data[idx], theta_data[idx], u_theta_data[idx])
         idx += 1
         clock.tick(24)  # Cap frame rate to 24 fps
     else:

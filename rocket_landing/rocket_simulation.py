@@ -56,6 +56,13 @@ def rotate_point(x, y, theta, cx, cy):
     y_new = dx * math.sin(theta) + dy * math.cos(theta) + cy
     return x_new, y_new
 
+def get_side_thruster_coordinates(x, y, theta, offset_x, offset_y):
+    """Get the starting coordinates of the side thrusters after rotation"""
+    thruster_x = x + offset_x
+    thruster_y = y + offset_y
+    thruster_x_rotated, thruster_y_rotated = rotate_point(thruster_x, thruster_y, theta, x, y)
+    return int(thruster_x_rotated), int(thruster_y_rotated)
+
 def draw_full_background():
     current_height = max(h_data)
     for y in range(0, background_height, int(100 * meter_per_pixel)):
@@ -132,6 +139,42 @@ def draw_window(rocket_pos, thrust, velocity, time, height, theta, u_theta):
             yellow_g = random.randint(200, 255)
             yellow_color = (yellow_r, yellow_g, 0)
             pygame.draw.circle(screen, yellow_color, (particle_x, particle_y), 5)
+            
+    # Side Thrust particles
+    side_thrust_intensity = abs(u_theta) / 10000  # Normalize to range [0, 1]
+    num_side_particles = int(50 * side_thrust_intensity)
+
+    left_thruster_x, left_thruster_y = get_side_thruster_coordinates(cog_x, cog_y, theta, -rocket_width_scaled // 3, -rocket_height_scaled // 1.5)
+    right_thruster_x, right_thruster_y = get_side_thruster_coordinates(cog_x, cog_y, theta, rocket_width_scaled // 3, -rocket_height_scaled // 1.5)
+
+    # Determine the orthogonal direction based on the rocket's orientation
+    dx = -math.sin(theta - math.pi / 2)
+    dy = math.cos(theta - math.pi / 2)
+
+    for i in range(num_side_particles):
+        # Set the base x and y for the thruster currently active
+        if u_theta > 0:  # Left thruster
+            base_x = left_thruster_x
+            base_y = left_thruster_y
+            # Randomize the offset in the direction of thrust
+            offset_distance = random.randint(0, int(10 * side_thrust_intensity * zoom_scale_factor))
+            particle_x = base_x + -dx * offset_distance
+            particle_y = base_y + -dy * offset_distance
+        else:  # Right thruster
+            base_x = right_thruster_x
+            base_y = right_thruster_y
+            # Randomize the offset in the direction of thrust
+            offset_distance = random.randint(0, int(10 * side_thrust_intensity * zoom_scale_factor))
+            particle_x = base_x + dx * offset_distance
+            particle_y = base_y + dy * offset_distance
+
+        # Draw the particle with random variations of white
+        white_r = random.randint(200, 255)
+        white_g = random.randint(200, 255)
+        white_color = (white_r, white_g, white_g)
+        pygame.draw.circle(screen, white_color, (int(particle_x), int(particle_y)), 3)
+
+
     
     # Metrics
     velocity_text = font.render(f"Speed: {velocity:.2f} m/s", True, WHITE)

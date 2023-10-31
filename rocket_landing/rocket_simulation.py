@@ -21,12 +21,12 @@ GREY = (128, 128, 128)  # Color for landing pad
 
 # Load the data from the .mat file
 data = loadmat('simulationResults.mat')
-h_data = [float(h) for h in data['h']]
-t_data = [float(t) for t in data['t']]
-u_th_data = [float(u) for u in data['u_m']]
-u_theta_data = [float(u_theta) for u_theta in data['u_theta']]
-v_data = [float(v) for v in data['v']]
-theta_data = [float(theta) for theta in data['theta']] # in radians
+h_data = [float(h) for h in data['h'].flatten()]
+t_data = [float(t) for t in data['t'].flatten()]
+u_th_data = [float(u) for u in data['u_m'].flatten()]
+u_theta_data = [float(u_theta) for u_theta in data['u_theta'].flatten()]
+v_data = [float(v) for v in data['v'].flatten()]
+theta_data = [float(theta) for theta in data['theta'].flatten()] # in radians
 
 
 # Set up the display and font

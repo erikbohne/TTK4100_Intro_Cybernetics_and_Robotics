@@ -8,7 +8,7 @@ k = 5.47; % Air resistance constant
 v_term = -211; % Terminal velocity
 v_ref = -1; % Landing velocity
 g = 9.81; % Gravity
-t = 60; % sim time
+t = 90; % sim time
 
 % Regulator values
 Kp = 100000;

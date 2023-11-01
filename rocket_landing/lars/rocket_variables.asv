@@ -14,11 +14,11 @@ radius_earth = 6371000; %m
 gravitational_constant = 6.6743E-11; % Tja
 
 h0 = 10000; % Starting height
-v_0 = -224; % Startin velocity
+v_0 = -211; % Startin velocity
 theta_0 = pi/12; % Starting rotation (radians)
 theta_dot_0 = 0; % Starting rotational velocity
 
-h_ref = -1; % Regulator Height Refrence Value
+h_ref = -5; % Regulator Height Refrence Value
 theta_ref = 0; % Regulator Rotaion Refrence Value
 
 % Regulator values for rotational system
@@ -31,7 +31,7 @@ Kpk = 10000;
 Tk = 10; %sek
 
 Kp1 = 550000;
-Ki1 = 100000;
+Ki1 = 75000;
 Kd1 = 500000;
 
 %Kp1 = 0.6*Kpk;
@@ -48,8 +48,7 @@ v = ans.fart.Data;
 u_m = ans.u_hoyde.Data;
 theta = ans.theta.Data;
 u_theta = ans.u_theta.Data;
-fuel_mass_t = ans.fuel_mass.Data;
-w = ans.w.Data;
+fuel_mass_
 
 % Landing time
 landing_idx = find(h <= 0, 1, 'first');
@@ -68,32 +67,18 @@ burn_time = landing_time - burn_start_time;
 energy_used = trapz(t(burn_start_idx:landing_idx), u_m(burn_start_idx:landing_idx) .* -v(burn_start_idx:landing_idx));
 
 
-% Landing fuel mass
-landing_fuel_mass = fuel_mass_t(landing_idx);
-
-% Set remaining values to zero after the rocket has landed
-h(landing_idx+1:end) = 0;
-v(landing_idx+1:end) = 0;
-u_m(landing_idx+1:end) = 0;
-theta(landing_idx+1:end) = 0;
-u_theta(landing_idx+1:end) = 0;
-fuel_mass_t(landing_idx+1:end) = fuel_mass_t(landing_idx);  % Assuming you want to keep this constant after landing
-w(landing_idx+1:end) = 0;  % Assuming you want to set this to zero as well
-
-
-%fprintf('Burn starts at: %f seconds\n', burn_start_time);
-%fprintf('Burn ends at: %f seconds\n', burn_end_time);
+fprintf('Burn starts at: %f seconds\n', burn_start_time);
+fprintf('Burn ends at: %f seconds\n', burn_end_time);
 fprintf('Total burn time: %f seconds\n', burn_time);
-fprintf('Landing fuell mass: %f kg\n', landing_fuel_mass)
-%fprintf('Landing time: %f seconds\n', landing_time);
+fprintf('Landing time: %f seconds\n', landing_time);
 fprintf('Landing velocity: %f m/s\n', landing_velocity);
-%fprintf('Energy used: %f J (or appropriate unit)\n', energy_used);
+fprintf('Energy used: %f J (or appropriate unit)\n', energy_used);
 
-%fprintf('Score: %f', score = objective_function(landing_time, landing_velocity));
+fprintf('Score: %f', score = objective_function(landing_time, landing_velocity));
 
 
 % Define parameter ranges
-Kp_range = linspace(20000, 200000, 3);
+Kp_range = linspace(20000, 200000, 3); % Change these bounds and number of steps as needed
 Ki_range = linspace(8000, 48000, 3);
 Kd_range = linspace(80000, 190000, 3);
 
@@ -149,11 +134,11 @@ for Kp = Kp_range
 end
 
 % Display the best parameters
-% fprintf('Best Kp: %f, Best Ki: %f, Best Kd: %f\n', best_params(1), best_params(2), best_params(3));
+fprintf('Best Kp: %f, Best Ki: %f, Best Kd: %f\n', best_params(1), best_params(2), best_params(3));
 
 
 % After your simulation
-save('simulationResults.mat', "u_m","u_theta", "t", "h", "v", "theta", "fuel_mass_t", "w");
+save('simulationResults.mat', "u_m","u_theta", "t", "h", "v", "theta");
 
 % Objective function for optimization, prioritizing landing velocity and landing time
 function score = objective_function(landing_time, landing_velocity)

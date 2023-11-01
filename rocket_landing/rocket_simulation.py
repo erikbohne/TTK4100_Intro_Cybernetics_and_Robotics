@@ -27,6 +27,8 @@ u_th_data = [float(u) for u in data['u_m'].flatten()]
 u_theta_data = [float(u_theta) for u_theta in data['u_theta'].flatten()]
 v_data = [float(v) for v in data['v'].flatten()]
 theta_data = [float(theta) for theta in data['theta'].flatten()] # in radians
+fuel_mass = [float(fuel) for fuel in data['fuel_mass_t'].flatten()]
+wind = [float(w) for w in data['w'].flatten()]
 
 
 # Set up the display and font
@@ -70,6 +72,7 @@ def draw_full_background():
         height_label = font.render(f"{int(current_height)} m", True, WHITE)
         background_surface.blit(height_label, (10, y))
         current_height -= 100
+    
 
 # Call the function once to prepare the entire background
 draw_full_background()
@@ -86,7 +89,7 @@ def draw_window(rocket_pos, thrust, velocity, time, height, theta, u_theta):
     pygame.draw.rect(screen, RED, (right_center - rocket_width_scaled * 0.001 // 2, scaled_h, rocket_width_scaled * 0.1, rocket_height_scaled * 0.05))  # Rocket
 
     # Calculate the portion of the background to show based on rocket height
-    offset = background_height - int(meter_per_pixel * height) - HEIGHT + 65
+    offset = background_height - int(meter_per_pixel * height) - HEIGHT + 60
     screen.blit(background_surface, (0, 0), (0, offset, HEIGHT, HEIGHT))
 
     # Draw the stationary rocket
@@ -183,11 +186,44 @@ def draw_window(rocket_pos, thrust, velocity, time, height, theta, u_theta):
     theta_text = font.render(f"Angle: {theta:.2f} rad", True, WHITE)
     u_theta_text = font.render(f"Side thruster: {u_theta:.0f} N", True, WHITE)
     
-    screen.blit(velocity_text, (WIDTH - 250, 10))
-    screen.blit(time_text, (WIDTH - 250, 40))
-    screen.blit(height_text, (WIDTH - 250, 70))
-    screen.blit(theta_text, (WIDTH - 250, 100))
-    screen.blit(u_theta_text, (WIDTH - 250, 130))
+    # Fuel bar
+    fuel_bar_width = 50
+    fuel_bar_height = 500
+    fuel_bar_surface = pygame.Surface((fuel_bar_width, fuel_bar_height))
+    fuel_bar_surface.fill(GREY)
+    fuel_bar_rect = pygame.Rect(0, 0, fuel_bar_width, fuel_bar_height)
+    fuel_bar_rect.bottomleft = (750, HEIGHT)
+    screen.blit(fuel_bar_surface, fuel_bar_rect)
+    pygame.draw.rect(screen, BLACK, fuel_bar_rect, 2)
+    
+    # Draw the fuel bar
+    fuel_bar_height_scaled = fuel_bar_height * (fuel_mass[idx] / max(fuel_mass)) / 4
+    fuel_bar_rect_scaled = pygame.Rect(0, 0, fuel_bar_width, fuel_bar_height_scaled)
+    fuel_bar_rect_scaled.bottomleft = (750, HEIGHT)
+    pygame.draw.rect(screen, YELLOW, fuel_bar_rect_scaled)
+    
+    # Show wind as a vector
+    wind_arrow_length = 50
+    wind_arrow_x = 400
+    wind_arrow_y = 100
+    wind_arrow_dx = wind[idx] / 10000
+    wind_arrow_dy = 0
+    wind_arrow_dx_scaled = wind_arrow_dx * wind_arrow_length
+    wind_arrow_dy_scaled = wind_arrow_dy * wind_arrow_length
+    wind_arrow_end_x = wind_arrow_x + wind_arrow_dx_scaled
+    wind_arrow_end_y = wind_arrow_y + wind_arrow_dy_scaled
+    pygame.draw.line(screen, WHITE, (wind_arrow_x, wind_arrow_y), (wind_arrow_end_x, wind_arrow_end_y), 2)
+    pygame.draw.line(screen, WHITE, (wind_arrow_end_x, wind_arrow_end_y), (wind_arrow_end_x - 10, wind_arrow_end_y - 5), 2)
+    pygame.draw.line(screen, WHITE, (wind_arrow_end_x, wind_arrow_end_y), (wind_arrow_end_x - 10, wind_arrow_end_y + 5), 2)
+    wind_text = font.render(f"Wind: {(wind[idx] / 1000):.2f} m/s", True, WHITE)
+    
+    
+    screen.blit(velocity_text, (WIDTH - 650, 10))
+    screen.blit(time_text, (WIDTH - 650, 40))
+    screen.blit(height_text, (WIDTH - 650, 70))
+    screen.blit(theta_text, (WIDTH - 650, 100))
+    screen.blit(u_theta_text, (WIDTH - 650, 130))
+    screen.blit(wind_text, (WIDTH - 650, 160))
 
     pygame.display.flip()
 

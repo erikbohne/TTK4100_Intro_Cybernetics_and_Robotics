@@ -45,6 +45,7 @@ sim 'rocket.slx';
 t = ans.tout;
 h = ans.hoyde.Data;
 v = ans.fart.Data;
+u = ans.u.Data;
 u_m = ans.u_hoyde.Data;
 theta = ans.theta.Data;
 u_theta = ans.u_theta.Data;
@@ -72,13 +73,12 @@ energy_used = trapz(t(burn_start_idx:landing_idx), u_m(burn_start_idx:landing_id
 landing_fuel_mass = fuel_mass_t(landing_idx);
 
 % Set remaining values to zero after the rocket has landed
-h(landing_idx+1:end) = 0;
+%h(landing_idx+1:end) = 0;
 v(landing_idx+1:end) = 0;
 u_m(landing_idx+1:end) = 0;
 theta(landing_idx+1:end) = 0;
 u_theta(landing_idx+1:end) = 0;
 fuel_mass_t(landing_idx+1:end) = fuel_mass_t(landing_idx);  % Assuming you want to keep this constant after landing
-w(landing_idx+1:end) = 0;  % Assuming you want to set this to zero as well
 
 
 %fprintf('Burn starts at: %f seconds\n', burn_start_time);
@@ -93,9 +93,9 @@ fprintf('Landing velocity: %f m/s\n', landing_velocity);
 
 
 % Define parameter ranges
-Kp_range = linspace(20000, 200000, 3);
-Ki_range = linspace(8000, 48000, 3);
-Kd_range = linspace(80000, 190000, 3);
+Kp_range = linspace(20000, 200000, 12);
+Ki_range = linspace(8000, 48000, 12);
+Kd_range = linspace(80000, 190000, 21);
 
 best_score = inf;
 best_params = [0, 0, 0];
@@ -105,6 +105,7 @@ for Kp = Kp_range
     continue
     for Ki = Ki_range
         for Kd = Kd_range
+            
             % Update PID parameters
             Kp1 = Kp;
             Ki1 = Ki;
@@ -126,14 +127,6 @@ for Kp = Kp_range
             landing_velocity = v(landing_idx);
             burn_start_idx = find(u_m > F_max/10, 1, 'first');
             burn_start_time = t(burn_start_idx);
-            energy_used = trapz(t(burn_start_idx:landing_idx), u_m(burn_start_idx:landing_idx) .* -v(burn_start_idx:landing_idx));
-
-            fprintf('Burn starts at: %f seconds\n', burn_start_time);
-            fprintf('Burn ends at: %f seconds\n', landing_time);
-            fprintf('Total burn time: %f seconds\n', landing_time - burn_start_time);
-            fprintf('Landing time: %f seconds\n', landing_time);
-            fprintf('Landing velocity: %f m/s\n', landing_velocity);
-            fprintf('Energy used: %f J (or appropriate unit)\n', energy_used);
             
             % Evaluate the score based on your specific metrics
             score = objective_function(landing_time - burn_start_time, landing_velocity);
@@ -153,15 +146,14 @@ end
 
 
 % After your simulation
-save('simulationResults.mat', "u_m","u_theta", "t", "h", "v", "theta", "fuel_mass_t", "w");
+save('simulationResults.mat', "u", "u_m","u_theta", "t", "h", "v", "theta", "fuel_mass_t", "w");
 
 % Objective function for optimization, prioritizing landing velocity and landing time
 function score = objective_function(landing_time, landing_velocity)
-    %if abs(landing_velocity) > 1  % If landing velocity is not between -1 and 1 m/s
-    %    score = 1e6;  % Assign a high penalty
-    %else
-    %    score = landing_time;  % Otherwise, focus on minimizing landing time
-    %end
-    score = abs(landing_time);
+    if abs(landing_velocity) > 1  % If landing velocity is not between -1 and 1 m/s
+        score = 1e6;  % Assign a high penalty
+    else
+        score = landing_time;  % Otherwise, focus on minimizing landing time
+    end
 end
 

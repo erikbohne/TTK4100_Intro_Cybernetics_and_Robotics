@@ -215,7 +215,7 @@ def draw_window(rocket_pos, thrust, velocity, time, height, theta, u_theta):
     pygame.draw.line(screen, WHITE, (wind_arrow_x, wind_arrow_y), (wind_arrow_end_x, wind_arrow_end_y), 2)
     pygame.draw.line(screen, WHITE, (wind_arrow_end_x, wind_arrow_end_y), (wind_arrow_end_x - 10, wind_arrow_end_y - 5), 2)
     pygame.draw.line(screen, WHITE, (wind_arrow_end_x, wind_arrow_end_y), (wind_arrow_end_x - 10, wind_arrow_end_y + 5), 2)
-    wind_text = font.render(f"Wind: {(wind[idx] / 1000):.2f} m/s", True, WHITE)
+    wind_text = font.render(f"Wind: {(wind[idx] / 10000):.2f} m/s", True, WHITE)
     
     
     screen.blit(velocity_text, (WIDTH - 650, 10))
